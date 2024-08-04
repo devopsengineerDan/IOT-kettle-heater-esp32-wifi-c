@@ -409,8 +409,8 @@ esp_err_t connect_tcp_server(void)
 	char readBuffer[1024] = {0};
 
 	serverInfo.sin_family = AF_INET;
-	serverInfo.sin_addr.s_addr = 0x0100007f;
-	serverInfo.sin_port = htons(12345);
+	serverInfo.sin_addr.s_addr = 0x0; // Initial 0x0100007f
+	serverInfo.sin_port = htons(80); // Initial 12345
 
 
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -430,6 +430,7 @@ esp_err_t connect_tcp_server(void)
 
 	ESP_LOGI(TAG, "Connected to TCP server.");
 	bzero(readBuffer, sizeof(readBuffer));
+	
     int r = read(sock, readBuffer, sizeof(readBuffer)-1);
     for(int i = 0; i < r; i++) {
         putchar(readBuffer[i]);
@@ -439,6 +440,7 @@ esp_err_t connect_tcp_server(void)
     {
     	ESP_LOGI(TAG, "WE DID IT!");
     }
+    
     //My code initial point
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
@@ -482,7 +484,7 @@ esp_err_t connect_tcp_server(void)
               }
               if (strstr(readBuffer, "turmeon") > 0)
               {
-                     ESP_LOGI(TAG, "Turning off");
+                     ESP_LOGI(TAG, "Turning off"); 
                      gpio_set_level(GPIO_PIN, 0);
                      write(cfd, on_message, strien(on_message));
                      n = 0;
@@ -528,4 +530,4 @@ void app_main(void)
 		ESP_LOGI(TAG, "Failed to connect to remote server, dying...");
 		return;
 	}
-}	
+}
